@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Task from './components/Task'
 
 export default function App() {
@@ -13,6 +13,8 @@ export default function App() {
     setTaskItems([...taskItems, task])
     setTask(null);
   }
+
+  // add a new task pressing enter
 
   // on click delete the task
   const completeTask = (index) => {
@@ -28,7 +30,7 @@ export default function App() {
       <View style={styles.tasksWrapper}>
         <Text style={styles.tasksSectionTitle}>Today's tasks</Text>
 
-        <View style={styles.items}>
+        <ScrollView style={styles.items} showsVerticalScrollIndicator={false}>
           {/* --------------------------------------------------------------------------- Where the magic appens */}
           {
             taskItems.map((item, index) => {
@@ -39,7 +41,7 @@ export default function App() {
               )
             })
           }
-        </View>
+        </ScrollView>
 
       </View>
       
@@ -49,7 +51,14 @@ export default function App() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}
       >
-        <TextInput style={styles.input} placeholder={'Write a task'} value={task} onChangeText={text => setTask(text)} />
+        <TextInput 
+        style={styles.input}
+        returnKeyType = 'done' 
+        placeholder={'Write a task'}
+        value={task} 
+        onChangeText={text => setTask(text)}
+        onSubmitEditing={() => handleAddTask()}
+       />
 
         <TouchableOpacity onPress={() => handleAddTask()} >
           <View style={styles.addWrapper}>
@@ -79,6 +88,8 @@ const styles = StyleSheet.create({
   },
   items: {
     marginTop: 30,
+    height: '75%',
+    borderRadius: 15,
   },
   writeTaskWrapper: {
     position: 'absolute',
@@ -98,8 +109,8 @@ const styles = StyleSheet.create({
     width: 250,
   },
   addWrapper: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     backgroundColor: '#FFF',
     borderRadius: 60,
     justifyContent: 'center',
